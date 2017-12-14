@@ -5,8 +5,10 @@ import "../stylesheets/main.scss";
 export default class App extends React.Component {
   // render
   render() {
+    console.log(this.props);
+
     return (
-      <div className="container">
+      <div>
         {this.props.children}
       </div>
     );

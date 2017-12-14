@@ -1,6 +1,6 @@
 // http://webpack.github.io/docs/configuration.html
 // http://webpack.github.io/docs/webpack-dev-server.html
-var app_root = 'src_users'; // the app root folder: src, src_users, etc
+var app_root = 'src'; // the app root folder: src, src_users, etc
 var path = require('path');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 
@@ -22,7 +22,7 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loaders: ['react-hot', 'babel'],
+        loaders: ['react-hot', 'babel?presets[]=es2015,presets[]=stage-0'],
         exclude: /node_modules/,
       },
       {
@@ -38,11 +38,12 @@ module.exports = {
   },
   devServer: {
     contentBase: __dirname + '/public',
+    disableHostCheck: true,
   },
   plugins: [
     new CleanWebpackPlugin(['css/main.css', 'js/bundle.js'], {
       root: __dirname + '/public',
-      verbose: true,
+      verbose: false,
       dry: false, // true for simulation
     }),
   ],
