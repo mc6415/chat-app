@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Container, Header, Icon, Button, Modal, Transition, Form } from 'semantic-ui-react';
+import { Grid, Container, Header, Icon, Button, Modal, Transition, Form, Message } from 'semantic-ui-react';
 import { withRouter } from 'react-router';
 import Firebase from 'firebase';
 import fb from "../firebase";
@@ -7,7 +7,7 @@ import fb from "../firebase";
 class Home extends React.Component {
   constructor(props){
     super(props);
-    this.state = {email: '', password: '', registerVisible: false};
+    this.state = {email: '', password: '', registerVisible: false, registerError: false, errorMessage: ''};
   }
 
   loginGoogle = () => {
@@ -46,12 +46,13 @@ class Home extends React.Component {
 
   signUp = () => {
     fb.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(this.login);
+      .then(this.login)
+      .catch((err) => {
+        this.setState({registerError: true, errorMessage: err.message});
+      })
   }
 
   render() {
-    console.log(this.props);
-
     return (
       <div className="page-home">
         <Grid centered>
@@ -77,18 +78,26 @@ class Home extends React.Component {
             <Button onClick={this.registerVisibility}> Register / Login </Button>
           </Grid.Row>
           <Grid.Row>
-          <Transition visible={this.state.registerVisible} duration={500}>
-            <Form inverted>
-            <Form.Group widths="equal">
-              <Form.Input type="text" label="email" value={this.state.email} onChange={this.updateEmail} />
-              <Form.Input type="password" label="Password" value={this.state.password} onChange={this.updatePassword} />
-            </Form.Group>
+            <Transition visible={this.state.registerError} duration={500}>
+              <Message negative>
+                <Message.Header>Something went wrong!</Message.Header>
+                {this.state.errorMessage}
+              </Message>
+            </Transition>
+          </Grid.Row>
+          <Grid.Row>
+            <Transition visible={this.state.registerVisible} duration={500}>
+              <Form inverted>
               <Form.Group widths="equal">
-                <Form.Button onClick={this.signUp} > Sign Up </Form.Button>
-                <Form.Button onClick={this.login} > Login </Form.Button>
+                <Form.Input type="text" label="email" value={this.state.email} onChange={this.updateEmail} />
+                <Form.Input type="password" label="Password" value={this.state.password} onChange={this.updatePassword} />
               </Form.Group>
-            </Form>
-          </Transition>
+                <Form.Group widths="equal">
+                  <Form.Button onClick={this.signUp} > Sign Up </Form.Button>
+                  <Form.Button onClick={this.login} > Login </Form.Button>
+                </Form.Group>
+              </Form>
+            </Transition>
           </Grid.Row>
         </Grid>
       </div>

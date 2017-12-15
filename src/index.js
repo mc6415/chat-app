@@ -6,7 +6,7 @@ import { router } from "./router.js";
 
 // render the main component
 ReactDOM.render(
-  <Provider>
+  <Provider store>
   {router}
   </Provider>,
   document.getElementById('app')
